@@ -7,8 +7,15 @@ It take an image as input and outputs three files, called image descriptors, tha
 
 A Node version (preferred) and Web version are provided.
 
-Check out the following tutorial to learn how to generate good markers!
-https://github.com/Carnaux/NFT-Marker-Creator/wiki/Creating-good-markers
+**Original repository is from @carnaux, we thank him so much and hope to keep this collaboration alive 😀**
+
+@carnaux references:
+* https://github.com/Carnaux
+* https://twitter.com/DanielCarnaux
+
+
+🖼Check out [this tutorial](https://github.com/Carnaux/NFT-Marker-Creator/wiki/Creating-good-markers) with advices from the author on how to create a good marker, choosing the right image.
+
 
 # Web version
 
