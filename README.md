@@ -1,13 +1,32 @@
-# NFT MARKER CREATOR
+# Image Tracking (NFT) MARKER CREATOR
 
-This editor creates NFT markers for ARTOOLKIT 5.x, and it is part of the efforts to bring NFT tracking to jsartoolkit5 (and eventually projects like AR.js).
+This editor creates Image Tracking (NFT) markers for ARTOOLKIT 5.x.
+This can be used for AR.js and jsartoolkit5.
+
+It take an image as input and outputs three files, called image descriptors, that can be loaded on the Web App for Image Tracking, using AR.js (or jsartoolkit5).
 
 A Node version (preferred) and Web version are provided.
 
-Check out the wiki to learn how to generate good markers! 
+Check out the following tutorial to learn how to generate good markers!
 https://github.com/Carnaux/NFT-Marker-Creator/wiki/Creating-good-markers
 
-## Node version
+# Web version
+
+**Online version, ready to use: https://ar-js-org.github.io/NFT-Marker-Creator/**
+
+This version is less efficient for images with width and/or height with 1000px or higher.
+
+
+## Instructions
+
+1. Upload any JPG/PNG image.
+2. If the Number of Channels is missing, it will as for it.
+3. Click the generate button.
+4. The files will be automatically downloaded when the generation finishes.
+
+Advanced options coming soon.
+
+## Node version (preferred version)
 
 ### How to use it
 
@@ -23,7 +42,7 @@ https://github.com/Carnaux/NFT-Marker-Creator/wiki/Creating-good-markers
      - markerCreatorAppFolder
          - app.js
          - NftMarkerCreator.min.js
-         - IMAGE.PNG :arrow_left:
+         - IMAGE.PNG
          - ...
 
      or
@@ -31,14 +50,14 @@ https://github.com/Carnaux/NFT-Marker-Creator/wiki/Creating-good-markers
      - markerCreatorAppFolder
           - app.js
           - NftMarkerCreator.min.js
-          - FOLDER/IMAGE.PNG :arrow_left:
+          - FOLDER/IMAGE.PNG
           - ...
 
 4. Run it
 
-    ` node app.js -i PATH/TO/IMAGE`
+    ` node app.js -i <PATH/TO/IMAGE>`
 
-     In the end of the process an "output" folder will be created(if it does not exist) with the marker files.
+     In the end of the process an "output" folder will be created (if it does not exist) with the image-descriptors files.
 
 You can use additional flags with the run command.
 
@@ -65,21 +84,6 @@ e.g node app.js -i image.png -level=4 -min_thresh=8
 
 
 5. The generated files will be on the "output" folder.
-
-# Web version
-
-https://carnaux.github.io/NFT-Marker-Creator/
-
-This version is less efficient for images with width and/or height with 1000px or higher.
-
-Advanced options coming soon.
-
-## Instructions
-
-1. Upload any JPG/PNG image.
-2. If the Number of Channels is missing, it will as for it.
-3. Click the generate button.
-4. The files will be automatically downloaded when the generation finishes.
 
 ------
 #### If you want to generate you own NftMarkerCreator.min.js use the dev branch.
