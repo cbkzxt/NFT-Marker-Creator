@@ -57,7 +57,9 @@ Advanced options coming soon.
 
     ` node app.js -i <PATH/TO/IMAGE>`
 
-     In the end of the process an "output" folder will be created (if it does not exist) with the image-descriptors files.
+5. The prompt may ask you to insert information abou the image (width in px, height in px, DPI). It's strongly suggested to insert them.
+
+6. In the end of the process an "output" folder will be created (if it does not exist) with the image-descriptors files.
 
 You can use additional flags with the run command.
 
