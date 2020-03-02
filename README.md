@@ -10,6 +10,8 @@ A Node version (preferred) and Web version are provided.
 Check out the following tutorial to learn how to generate good markers!
 https://github.com/Carnaux/NFT-Marker-Creator/wiki/Creating-good-markers
 
+Original repository is from @carnaux, we thank him so much and hope to keep this collaboration alive 😀.
+
 # Web version
 
 **Online version, ready to use: https://ar-js-org.github.io/NFT-Marker-Creator/**
