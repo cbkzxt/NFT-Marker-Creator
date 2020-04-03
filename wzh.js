@@ -1,11 +1,12 @@
 const path = require("path");
 const fs = require('fs');
-const inkjet = require('inkjet');
 const PNG = require('pngjs').PNG;
-const readlineSync = require('readline-sync');
-var Module = require('./libs/NftMarkerCreator_wasm.js');
+const jpeg = require('jpeg-js');
+
+var artoolkit_wasm_url = './libs/NftMarkerCreator_wasm.wasm';
 
 class NftMarkerCreator_Wzh {
+
   params = [
     0,
     0
@@ -31,97 +32,29 @@ class NftMarkerCreator_Wzh {
   }
 
   useJPG(buf) {
-    inkjet.decode(buf, function (err, decoded) {
-      if (err) {
-        console.log("\n" + err + "\n");
-        process.exit(1);
-      } else {
-        let newArr = [];
+    let decoded = jpeg.decode(buf, true)
+    let newArr = [];
 
-        let verifyColorSpace = this.detectColorSpace(decoded.data);
+    let verifyColorSpace = this.detectColorSpace(decoded.data);
 
-        if (verifyColorSpace == 1) {
-          for (let j = 0; j < decoded.data.length; j += 4) {
-            newArr.push(decoded.data[j]);
-          }
-        } else if (verifyColorSpace == 3) {
-          for (let j = 0; j < decoded.data.length; j += 4) {
-            newArr.push(decoded.data[j]);
-            newArr.push(decoded.data[j + 1]);
-            newArr.push(decoded.data[j + 2]);
-          }
-        }
-
-        let uint = new Uint8Array(newArr);
-        this.imageData.nc = verifyColorSpace;
-        this.imageData.array = uint;
+    if (verifyColorSpace == 1) {
+      for (let j = 0; j < decoded.data.length; j += 4) {
+        newArr.push(decoded.data[j]);
       }
-    });
-
-    inkjet.exif(buf, function (err, metadata) {
-      if (err) {
-        console.log("\n" + err + "\n");
-        process.exit(1);
-      } else {
-        if (metadata == null || metadata == undefined || metadata.length == undefined) {
-          var answer = readlineSync.question('The EXIF info of this image is empty or it does not exist. Do you want to inform its properties manually?[y/n]\n');
-
-          if (answer == "y") {
-            var answerWH = readlineSync.question('Inform the width and height: e.g W=200 H=400\n');
-
-            let valWH = this.getValues(answerWH, "wh");
-            this.imageData.sizeX = valWH.w;
-            this.imageData.sizeY = valWH.h;
-
-            var answerDPI = readlineSync.question('Inform the DPI: e.g DPI=220 [Default = 72](Press enter to use default)\n');
-
-            if (answerDPI == "") {
-              this.imageData.dpi = 72;
-            } else {
-              let val = this.getValues(answerDPI, "dpi");
-              this.imageData.dpi = val;
-            }
-          } else {
-            console.log("Exiting process!")
-            process.exit(1);
-          }
-        } else {
-          let dpi = Math.min(parseInt(metadata.XResolution.value), parseInt(metadata.YResolution.value));
-          if (dpi == null || dpi == undefined || dpi == NaN) {
-            console.log("\nWARNING: No DPI value found! Using 72 as default value!\n")
-            dpi = 72;
-          }
-
-          if (metadata.ImageWidth == null || metadata.ImageWidth == undefined) {
-            if (metadata.PixelXDimension == null || metadata.PixelXDimension == undefined) {
-              var answer = readlineSync.question('The image does not contain any width or height info, do you want to inform them?[y/n]\n');
-              if (answer == "y") {
-                var answer2 = readlineSync.question('Inform the width and height: e.g W=200 H=400\n');
-
-                let vals = this.getValues(answer2, "wh");
-                this.imageData.sizeX = vals.w;
-                this.imageData.sizeY = vals.h;
-              } else {
-                console.log("It's not possible to proceed without width or height info!")
-                process.exit(1);
-              }
-            } else {
-              this.imageData.sizeX = metadata.PixelXDimension.value;
-              this.imageData.sizeY = metadata.PixelYDimension.value;
-            }
-          } else {
-            this.imageData.sizeX = metadata.ImageWidth.value;
-            this.imageData.sizeY = metadata.ImageLength.value;
-          }
-
-          if (metadata.SamplesPerPixel == null || metadata.ImageWidth == undefined) {
-          } else {
-            this.imageData.nc = metadata.SamplesPerPixel.value;
-          }
-          this.imageData.dpi = dpi;
-        }
+    } else if (verifyColorSpace == 3) {
+      for (let j = 0; j < decoded.data.length; j += 4) {
+        newArr.push(decoded.data[j]);
+        newArr.push(decoded.data[j + 1]);
+        newArr.push(decoded.data[j + 2]);
       }
-    });
+    }
+
+    let uint = new Uint8Array(newArr);
+    this.imageData.nc = verifyColorSpace;
+    this.imageData.array = uint;
+    this.imageData.sizeX = decoded.width
+    this.imageData.sizeY = decoded.height
+    this.imageData.dpi = 72
   }
 
   usePNG(buf) {
@@ -310,7 +243,10 @@ class NftMarkerCreator_Wzh {
     }
   }
 
-  parse() {
+  async parse() {
+    const Module = require('./libs/NftMarkerCreator_wasm.js');
+    await new Promise(resolve => Module.onRuntimeInitialized = resolve)
+    let n = this.imageData.array.length * this.imageData.array.BYTES_PER_ELEMENT
     let heapSpace = Module._malloc(this.imageData.array.length * this.imageData.array.BYTES_PER_ELEMENT);
     Module.HEAPU8.set(this.imageData.array, heapSpace);
     Module._createImageSet(heapSpace, this.imageData.dpi, this.imageData.sizeX, this.imageData.sizeY, this.imageData.nc, 'temp', this.params.length, this.params)
