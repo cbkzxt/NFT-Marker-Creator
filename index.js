@@ -1,8 +1,8 @@
-const process = require("process");
-const path = require("path");
-const fs = require("fs").promises;
+const process = require('process')
+const path = require('path')
+const fs = require('fs').promises
 
-const NftMarkerCreator_Wzh = require("./wzh");
+const NftMarkerCreator_Wzh = require('./wzh')
 
 function removeExt(url) {
   let extName = path.extname(url)
