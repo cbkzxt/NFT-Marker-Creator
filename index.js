@@ -17,4 +17,5 @@ function removeExt(url) {
   await fs.writeFile(baseName + '.iset', iset)
   await fs.writeFile(baseName + '.fset', fset)
   await fs.writeFile(baseName + '.fset3', fset3)
+  process.exit()
 })()
